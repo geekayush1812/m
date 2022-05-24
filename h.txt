@@ -1,0 +1,50 @@
+clc;
+clear all;
+close all;
+
+ht=input('height of Tx antenna(30 to 200m)  ');  %39
+hr=input('height of Rx antenna(1 to 10m)  ');  %2
+f=input('freuency in MHZ from 150 to 1500  '); %159
+d=input('distance bet Tx to Rx from 1k to 150k');  %8
+t1=input ('city type1 (1 small or medium city, 2 large city)  ');  %2
+t2=input ('city type2 (1 urban , 2 suburban, 3 rural)  ');  %3
+
+display('path loss in dB ');
+
+if t1==1
+    a=(1.1*log(f)-0.7)*hr-(1.566*log(f)-0.8);
+elseif f <= 300
+    a=8.29*(log(1.54*hr))^2-1.1;
+else
+    a=3.2*(log(11.75*hr))^2-4.97;
+end
+
+    L50=69.55+26.16*log(f)-13.82*log(ht)-a+(44.9-6.55*log(ht))*log(d);
+
+if t2==2
+    L50=L50-(2*(log(f/28))^2)-5.4;
+elseif t2==3
+    L50=L50-(4.78*log(f)^2)+18.33*log(f)-40.94;
+end
+
+display(L50);
+
+for f=150:2:1500
+    if t1==1
+        a=(1.1*log(f)-0.7)*hr-(1.566*log(f)-0.8);
+    elseif f <= 300
+        a=8.29*(log(1.54*hr))^2-1.1;
+    else
+        a=3.2*(log(11.75*hr))^2-4.97;
+    end
+       L50=69.55+26.16*log(f)-13.82*log(ht)-a+(44.9-6.55*log(ht))*log(d);
+if t2==2
+    L50=L50-(2*(log(f/28))^2)-5.4;
+elseif t2==3
+        L50=L50-(4.78*log(f)^2)+18.33*log(f)-40.94;
+end
+
+plot(f,L50,'r.:');hold on;
+xlabel('frequency(MHz)');
+ylabel(' path loss (dB)');
+end
